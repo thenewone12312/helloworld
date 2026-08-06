@@ -25,10 +25,7 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "detail": "Build using msys g++.exe; includes ${workspaceFolder}/include and compiles glad.c"
         },
         {
@@ -69,6 +66,45 @@
                 "isDefault": false
             },
             "detail": "Build for macOS (kept for cross-platform reference)"
+        },
+        {
+            "type": "cppbuild",
+            "label": "MAC C/C++: g++ build active file MAC",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-I${workspaceFolder}/include",
+                "${workspaceFolder}/src/glad.c",
+                "${file}",
+                "-L${workspaceFolder}/lib-arm64",
+                "-lglfw3",
+                "-framework",
+                "Cocoa",
+                "-framework",
+                "OpenGL",
+                "-framework",
+                "IOKit",
+                "-framework",
+                "CoreVideo",
+                "-framework",
+                "Metal",
+                "-framework",
+                "QuartzCore",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "compiler: /usr/bin/g++"
         }
     ]
 }
