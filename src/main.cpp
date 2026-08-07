@@ -4,6 +4,7 @@
 
 #include "shaders/VertexShader.h"
 #include "shaders/FragmentShader.h"
+#include "shaders/ShaderProgram.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -64,6 +65,8 @@ int main()
     // vertex shader
     VertexShader vertexShader(vertexShaderSource);
     FragmentShader fragmentShader(fragmentShaderSource);
+    ShaderProgram shaderProgram(vertexShader, fragmentShader);
+    // shaderProgram.checkErrors();
 
     // unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
     // glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -89,20 +92,20 @@ int main()
     //     std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     // }
     // // link shaders
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader.getID());
-    glAttachShader(shaderProgram, fragmentShader.getID());
-    glLinkProgram(shaderProgram);
+    // unsigned int shaderProgram = glCreateProgram();
+    // glAttachShader(shaderProgram, vertexShader.getID());
+    // glAttachShader(shaderProgram, fragmentShader.getID());
+    // glLinkProgram(shaderProgram);
     // // check for linking errors
 
-    int success;
-    char infoLog[512];
+    // int success;
+    // char infoLog[512];
 
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
+    // glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    // if (!success) {
+    //     glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+    //     std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    // }
     // glDeleteShader(vertexShader.getID());
     // glDeleteShader(fragmentShader.getID());
 
@@ -162,7 +165,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw our first triangle
-        glUseProgram(shaderProgram);
+        glUseProgram(shaderProgram.getID());
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         //glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -179,7 +182,7 @@ int main()
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
-    glDeleteProgram(shaderProgram);
+    glDeleteProgram(shaderProgram.getID());
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------

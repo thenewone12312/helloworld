@@ -79,6 +79,7 @@
                 "${workspaceFolder}/src/glad.c",
                 "${workspaceFolder}/src/main.cpp",
                 "${workspaceFolder}/src/shaders/Shader.cpp",
+                "${workspaceFolder}/src/shaders/ShaderProgram.cpp",
                 "${workspaceFolder}/src/shaders/VertexShader.cpp",
                 "${workspaceFolder}/src/shaders/FragmentShader.cpp",
                 "-LC:\\msys64\\mingw64\\lib",
