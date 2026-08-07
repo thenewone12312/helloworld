@@ -1,10 +1,10 @@
 #include "Object.h"
 
-Object::Object(vec2 position, vec2 scale, float rotationRadians , Texture* texture){
+Object::Object(vec2 position, vec2 scale, float rotationRadians , Sprite* sprite){
     this->position = position;
     this->scale = scale;
     this->rotationRadians = rotationRadians;
-    this->texture = texture;
+    this->sprite = sprite;
 };
 
 void Object::setPosition(vec2 position){
@@ -28,7 +28,7 @@ void Object::setRotationRadians(float radians){
 void Object::rotateRadians(float radians){
     this->rotationRadians += radians;
 };
-void Object::setTexture(Texture* texture){
-    this->texture = texture;
+void Object::setSprite(Sprite* sprite){
+    this->sprite = sprite;
 };
 
