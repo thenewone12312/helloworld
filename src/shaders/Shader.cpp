@@ -9,12 +9,9 @@
 Shader::Shader(const char* shaderSource, GLenum shaderType)
 {
     //constructor
-    std::string code = loadFile(shaderSource);
-    const char* shaderCode = code.c_str();
-
     ID = glCreateShader(shaderType);
 
-    glShaderSource(ID, 1, &shaderCode, nullptr);
+    glShaderSource(ID, 1, &shaderSource, nullptr);
     glCompileShader(ID);
 
     checkErrors();
