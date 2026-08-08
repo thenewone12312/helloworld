@@ -25,12 +25,12 @@ mat2 mat2::operator*(const float scalar) const{
     );
 };
 
-vec2 mat2::operator*(const vec2& other) const{
-    return vec2(
-        m[0][0] * other.x + m[0][1] * other.y,
-        m[1][0] * other.x + m[1][1] * other.y
-    );
-};
+// vec2 mat2::operator*(const vec2& other) const{
+//     return vec2(
+//         m[0][0] * other.x + m[0][1] * other.y,
+//         m[1][0] * other.x + m[1][1] * other.y
+//     );
+// };
 
 mat3::mat3(float a, float b, float c, float d, float e, float f, float g, float h, float i){
     m[0][0] = a;
@@ -74,13 +74,13 @@ mat3 mat3::operator*(const float scalar) const{
     );
 };
 
-vec3 mat3::operator*(const vec3& other) const{
-    return vec3(
-        m[0][0] * other.x + m[0][1] * other.y + m[0][2] * other.z,
-        m[1][0] * other.x + m[1][1] * other.y + m[1][2] * other.z,
-        m[2][0] * other.x + m[2][1] * other.y + m[2][2] * other.z
-    );
-};
+// vec3 mat3::operator*(const vec3& other) const{
+//     return vec3(
+//         m[0][0] * other.x + m[0][1] * other.y + m[0][2] * other.z,
+//         m[1][0] * other.x + m[1][1] * other.y + m[1][2] * other.z,
+//         m[2][0] * other.x + m[2][1] * other.y + m[2][2] * other.z
+//     );
+// };
 
 mat4::mat4(float a, float b, float c, float d, float e, float f, float g, float h, float i, float j, float k, float l, float m, float n, float o, float p){
     this->m[0][0] = a;
@@ -125,14 +125,14 @@ mat4 mat4::operator*(const mat4& other) const{
     );
 };
 
-vec4 mat4::operator*(const vec4& other) const{
-    return vec4(
-        m[0][0] * other.x + m[0][1] * other.y + m[0][2] * other.z + m[0][3] * other.w,
-        m[1][0] * other.x + m[1][1] * other.y + m[1][2] * other.z + m[1][3] * other.w,
-        m[2][0] * other.x + m[2][1] * other.y + m[2][2] * other.z + m[2][3] * other.w,
-        m[3][0] * other.x + m[3][1] * other.y + m[3][2] * other.z + m[3][3] * other.w
-    );
-};
+// vec4 mat4::operator*(const vec4& other) const{
+//     return vec4(
+//         m[0][0] * other.x + m[0][1] * other.y + m[0][2] * other.z + m[0][3] * other.w,
+//         m[1][0] * other.x + m[1][1] * other.y + m[1][2] * other.z + m[1][3] * other.w,
+//         m[2][0] * other.x + m[2][1] * other.y + m[2][2] * other.z + m[2][3] * other.w,
+//         m[3][0] * other.x + m[3][1] * other.y + m[3][2] * other.z + m[3][3] * other.w
+//     );
+// };
 
 
 

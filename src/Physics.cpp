@@ -1,5 +1,7 @@
 #include "Physics.h"
 
+vec2 Physics::gravity = vec2(0.0f, 0.0f);
+
 void Physics::setGravity(vec2 gravity){
     Physics::gravity = gravity;
 };
