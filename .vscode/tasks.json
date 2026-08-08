@@ -3,14 +3,19 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "ZIHAN C/C++: g++.exe build active file (msys)",
+            "label": "ZIHAN C/C++: g++.exe build active file (msys) ZIHAN",
             "command": "c:\\msys64\\ucrt64\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
                 "-I${workspaceFolder}/include",
                 "${workspaceFolder}/src/glad.c",
-                "${file}",
+                "${workspaceFolder}/src/main.cpp",
+                "${workspaceFolder}/src/shaders/Shader.cpp",
+                "${workspaceFolder}/src/shaders/ShaderProgram.cpp",
+                "${workspaceFolder}/src/shaders/VertexShader.cpp",
+                "${workspaceFolder}/src/shaders/FragmentShader.cpp",
+                "${workspaceFolder}/src/Physics.cpp",
                 "-L",
                 "/ucrt64/lib",
                 "-lglfw3",
@@ -26,7 +31,7 @@
                 "$gcc"
             ],
             "group": "build",
-            "detail": "Build using msys g++.exe; includes ${workspaceFolder}/include and compiles glad.c"
+            "detail": "ZIHAN Build using msys g++.exe; includes ${workspaceFolder}/include and compiles glad.c"
         },
         {
             "type": "cppbuild",
@@ -42,6 +47,7 @@
                 "${workspaceFolder}/src/shaders/VertexShader.cpp",
                 "${workspaceFolder}/src/shaders/FragmentShader.cpp",
                 "${workspaceFolder}/src/shaders/ShaderProgram.cpp",
+                "${workspaceFolder}/src/Physics.cpp",
                 "-L${workspaceFolder}/lib-arm64",
                 "-lglfw3",
                 "-framework",
@@ -85,6 +91,7 @@
                 "${workspaceFolder}/src/shaders/ShaderProgram.cpp",
                 "${workspaceFolder}/src/shaders/VertexShader.cpp",
                 "${workspaceFolder}/src/shaders/FragmentShader.cpp",
+                "${workspaceFolder}/src/Physics.cpp",
                 "-LC:\\msys64\\mingw64\\lib",
                 "-lglfw3",
                 "-lopengl32",

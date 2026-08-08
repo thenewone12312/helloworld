@@ -48,6 +48,31 @@ class vec3{
         float z;
 };
 
+class vec4{
+    public:
+        vec4();
+        vec4(float val);
+        vec4(float xVal, float yVal, float zVal, float wVal);
+        vec4 operator+(const vec4& other) const;
+        vec4& operator+=(const vec4& other);
+        vec4 operator-(const vec4& other) const;
+        vec4& operator-=(const vec4& other);
+        vec4 operator*(const vec4& other) const;
+        vec4& operator*=(const vec4& other);
+        vec4 operator*(const float scalar) const;
+        vec4& operator*=(float scalar);
+        vec4 operator/(const vec4& other) const;
+        vec4& operator/=(const vec4& other);
+        void normalize();
+        
+
+    private:
+        float x;
+        float y;
+        float z;
+        float w;
+};
+
 
 
 namespace para{

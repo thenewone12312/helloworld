@@ -12,6 +12,11 @@ class Object{
         void setRotationRadians(float radians);
         void rotateRadians(float radians);
         void setSprite(Sprite* Sprite);
+        
+        vec2 getPosition() const ;
+        vec2 getScale() const ;
+        float getRotationRadians() const ;
+        Sprite* getSprite() const ;
 
     private:
         vec2 position;
