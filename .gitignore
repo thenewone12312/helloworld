@@ -11,3 +11,8 @@ main.dSYM 16-18-54-599.dSYM
 
 #windows specific temp files
 desktop.ini
+
+#generated fiels
+main.dSYM/Contents
+main.yml
+Info.plist
