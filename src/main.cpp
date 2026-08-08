@@ -5,6 +5,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <filesystem>
 #endif
 
 #include "shaders/VertexShader.h"
@@ -95,8 +96,9 @@ int main()
     auto shaderDir = exePath / ".." / "shaders";
     VertexShader vertexShader((shaderDir / "default.vert").string().c_str());
     FragmentShader fragmentShader((shaderDir / "default.frag").string().c_str());
-    ShaderProgram shaderProgram(vertexShader, fragmentShader);
 #endif
+
+    ShaderProgram shaderProgram(vertexShader, fragmentShader);
     // shaderProgram.checkErrors();
 
     // unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
