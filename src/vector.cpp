@@ -144,6 +144,88 @@ vec3& vec3::operator/=(const vec3& other){
     return *this;
 };
 
+vec4::vec4(){
+    this->x = 0;
+    this->y = 0;
+    this->z = 0;
+    this->w = 0;
+};
+
+vec4::vec4(float val){
+    this->x = val;
+    this->y = val;
+    this->z = val;
+    this->w = val;
+};
+
+vec4::vec4(float xVal, float yVal, float zVal, float wVal){
+    this->x = xVal;
+    this->y = yVal;
+    this->z = zVal;
+    this->w = wVal;
+};
+
+vec4 vec4::operator+(const vec4& other) const{
+    return vec4(x + other.x, y + other.y, z + other.z, w + other.w);
+};
+
+vec4& vec4::operator+=(const vec4& other){
+    this->x += other.x;
+    this->y += other.y;
+    this->z += other.z;
+    this->w += other.w;
+    return *this;
+};
+
+vec4 vec4::operator-(const vec4& other) const{
+    return vec4(x - other.x, y - other.y, z - other.z, w - other.w);
+};
+
+vec4& vec4::operator-=(const vec4& other){
+    this->x -= other.x;
+    this->y -= other.y;
+    this->z -= other.z;
+    this->w -= other.w;
+    return *this;
+};
+
+
+vec4 vec4::operator*(const vec4& other) const{
+    return vec4(x * other.x, y * other.y, z * other.z, w * other.w);
+};
+
+vec4& vec4::operator*=(const vec4& other){
+    this->x *= other.x;
+    this->y *= other.y;
+    this->z *= other.z;
+    this->w *= other.w;
+    return *this;
+};
+
+vec4 vec4::operator*(const float scalar) const{
+    return vec4(x * scalar, y * scalar, z * scalar, w * scalar);
+};
+
+vec4& vec4::operator*=(const float scalar){
+    this->x *= scalar;
+    this->y *= scalar;
+    this->z *= scalar;
+    this->w *= scalar;
+    return *this;
+};
+
+vec4 vec4::operator/(const vec4& other) const{
+    return vec4(x / other.x, y / other.y, z / other.z, w / other.w);
+};
+
+vec4& vec4::operator/=(const vec4& other){
+    this->x /= other.x;
+    this->y /= other.y;
+    this->z /= other.z;
+    this->w /= other.w;
+    return *this;
+};
+
 
 vec2 para::interpolateLinear(vec2 start, vec2 end, float factor){
 

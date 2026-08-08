@@ -32,3 +32,16 @@ void Object::setSprite(Sprite* sprite){
     this->sprite = sprite;
 };
 
+vec2 Object::getPosition() const {
+    return position;
+}
+vec2 Object::getScale() const {
+    return scale;
+}
+float Object::getRotationRadians() const {
+    return rotationRadians;
+}
+Sprite* Object::getSprite() const {
+    return sprite;
+}
+
