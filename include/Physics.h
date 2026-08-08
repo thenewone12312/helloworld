@@ -1,14 +1,14 @@
 #pragma once
 
 #include "vector.h"
+#include "Object.h"
 
 class Physics {
 public:
-    static vec2 getGravity(const vec2& position);
-    // this class functions by applying the velocity to position
-    // static vec2 applyFriction(const vec2& velocity, float frictionCoefficient, float deltaTime);
-    // static vec2 applyForce(const vec2& velocity, const vec2& force, float mass, float deltaTime);
-    static vec2 updatePosition(const vec2& position, const vec2& velocity, float deltaTime);
+    static void setGravity(vec2 gravity);
+    static vec2 getGravity();
+    static void Accelerate(Object& object, const vec2& acceleration, float deltaTime);
+    static void updatePosition(Object& object, float deltaTime);
 private:
-    static const vec2 gravity; // Gravity vector
+    static vec2 gravity; // Gravity vector
 };
