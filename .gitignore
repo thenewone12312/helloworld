@@ -1,0 +1,13 @@
+# file builds
+main
+main.exe
+helloworld
+helloworld.exe
+
+main.dSYM 16-18-54-599.dSYM
+
+#mac specific temp files
+.DS_Store
+
+#windows specific temp files
+desktop.ini
