@@ -66,6 +66,13 @@ vec2& vec2::operator/=(const vec2& other){
     this->y /= other.y;
     return *this;
 };
+void vec2::normalize(){
+    float length = std::sqrt(x * x + y * y);
+    if (length != 0) {
+        x /= length;
+        y /= length;
+    }
+};
 
 
 
@@ -97,6 +104,7 @@ vec3 vec3::operator+(const vec3& other) const{
 vec3& vec3::operator+=(const vec3& other){
     this->x += other.x;
     this->y += other.y;
+    this->z += other.z;
     return *this;
 };
 
@@ -119,6 +127,7 @@ vec3 vec3::operator*(const vec3& other) const{
 vec3& vec3::operator*=(const vec3& other){
     this->x *= other.x;
     this->y *= other.y;
+    this->z *= other.z;
     return *this;
 };
 
@@ -142,6 +151,15 @@ vec3& vec3::operator/=(const vec3& other){
     this->y /= other.y;
     this->z /= other.z;
     return *this;
+};
+
+void vec3::normalize(){
+    float length = std::sqrt(x * x + y * y + z * z);
+    if (length != 0) {
+        x /= length;
+        y /= length;
+        z /= length;
+    }
 };
 
 vec4::vec4(){
@@ -225,7 +243,15 @@ vec4& vec4::operator/=(const vec4& other){
     this->w /= other.w;
     return *this;
 };
-
+void vec4::normalize(){
+    float length = std::sqrt(x * x + y * y + z * z + w * w);
+    if (length != 0) {
+        x /= length;
+        y /= length;
+        z /= length;
+        w /= length;
+    }
+};
 
 vec2 para::interpolateLinear(vec2 start, vec2 end, float factor){
 
