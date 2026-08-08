@@ -1,6 +1,7 @@
 #pragma once
-#include <iostream>
 
+#include <cmath>
+#include "matrix.h"
 
 class vec2{
     public:
@@ -13,14 +14,14 @@ class vec2{
         vec2& operator-=(const vec2& other);
         vec2 operator*(const vec2& other) const;
         vec2& operator*=(const vec2& other);
+        vec2 operator*(const mat4& other) const;
+        vec2& operator*=(const mat4& other);
         vec2 operator*(const float scalar) const;
         vec2& operator*=(float scalar);
         vec2 operator/(const vec2& other) const;
         vec2& operator/=(const vec2& other);
         void normalize();
-        
 
-    private:
         float x;
         float y;
 };
@@ -36,14 +37,14 @@ class vec3{
         vec3& operator-=(const vec3& other);
         vec3 operator*(const vec3& other) const;
         vec3& operator*=(const vec3& other);
+        vec3 operator*(const mat4& other) const;
+        vec3& operator*=(const mat4& other);
         vec3 operator*(const float scalar) const;
         vec3& operator*=(float scalar);
         vec3 operator/(const vec3& other) const;
         vec3& operator/=(const vec3& other);
         void normalize();
         
-
-    private:
         float x;
         float y;
         float z;
@@ -60,20 +61,19 @@ class vec4{
         vec4& operator-=(const vec4& other);
         vec4 operator*(const vec4& other) const;
         vec4& operator*=(const vec4& other);
+        vec4 operator*(const mat4& other) const;
+        vec4& operator*=(const mat4& other);
         vec4 operator*(const float scalar) const;
         vec4& operator*=(float scalar);
         vec4 operator/(const vec4& other) const;
         vec4& operator/=(const vec4& other);
         void normalize();
         
-
-    private:
         float x;
         float y;
         float z;
         float w;
 };
-
 
 
 namespace para{

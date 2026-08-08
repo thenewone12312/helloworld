@@ -8,10 +8,11 @@ vec2 Physics::getGravity() {
     return Physics::gravity;
 };
 
-void Physics::updatePosition(Object& object, float deltaTime) {
+void Physics::updatePosition(Object object, float deltaTime) {
     object.addPosition(object.getVelocity() * deltaTime);
+
 };
 
-void Physics::Accelerate(Object& object, const vec2& acceleration, float deltaTime) {
-    object.addVelocity(acceleration * deltaTime);
+void Physics::Accelerate(Object object, const vec2 acceleration, float deltaTime) {
+    object.setVelocity(object.getVelocity() + acceleration * deltaTime);
 };
