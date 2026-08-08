@@ -3,6 +3,9 @@
 #include <iostream>
 #include <filesystem>
 
+#include <random>
+#include <algorithm>
+
 #ifdef _WIN32
 #include <windows.h>
 #include <filesystem>
@@ -11,6 +14,7 @@
 #include "shaders/VertexShader.h"
 #include "shaders/FragmentShader.h"
 #include "shaders/ShaderProgram.h"
+#include "vector.h"
 
 #ifdef _WIN32
 static std::filesystem::path getExecutablePath()
@@ -52,6 +56,11 @@ const unsigned int SCR_HEIGHT = 600;
 
 int main()
 {
+    //random initialization
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -65,7 +74,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Game Window", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -98,8 +107,7 @@ int main()
     FragmentShader fragmentShader((shaderDir / "default.frag").string().c_str());
 #endif
 
-    ShaderProgram shaderProgram(vertexShader, fragmentShader);
-    // shaderProgram.checkErrors();
+    ShaderProgram shaderProgram(vertexShader, fragmentShader);    // shaderProgram.checkErrors();
 
     // unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
     // glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -155,6 +163,16 @@ int main()
         1, 2, 3   // second Triangle
     };
     unsigned int VBO, VAO, EBO;
+
+    //color stuff
+    unsigned int color = glGetUniformLocation(shaderProgram.getID(), "uColor");
+    vec4 colorValue(//red|green|blue|alpha
+        1.0f, 
+        1.0f, 
+        1.0f, 
+        1.0f);
+        // std::cout << "uColor location: " << color << std::endl;
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -184,6 +202,12 @@ int main()
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    vec4 colorValue_prev(
+        0.2f, 
+        0.5f, 
+        0.8f, 
+        1.0f
+    ); // Initial color value
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -198,7 +222,15 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw our first triangle
+        colorValue.x = std::min(std::clamp(dis(gen),colorValue_prev.x - 0.01f, colorValue_prev.x + 0.01f), 0.9f); // Random red component
+        colorValue.y = std::min(std::clamp(dis(gen),colorValue_prev.y - 0.01f, colorValue_prev.y + 0.01f), 0.9f); // Random green component
+        colorValue.z = std::min(std::clamp(dis(gen),colorValue_prev.z - 0.01f, colorValue_prev.z + 0.01f), 0.9f); // Random blue component
+
+        colorValue_prev = colorValue; // Update previous color value
+
         shaderProgram.use();
+        glUniform4f(color, colorValue.x, colorValue.y, colorValue.z, colorValue.w);
+
         // glUseProgram(shaderProgram.getID());
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         //glDrawArrays(GL_TRIANGLES, 0, 6);
