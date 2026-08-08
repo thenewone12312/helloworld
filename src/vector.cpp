@@ -47,6 +47,8 @@ vec2& vec2::operator*=(const vec2& other){
     return *this;
 };
 
+// add operator* for vec2 and mat
+
 vec2 vec2::operator*(const float scalar) const{
     return vec2(x * scalar, y * scalar);
 };
