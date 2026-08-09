@@ -21,6 +21,8 @@
                 "${workspaceFolder}/src/EBO.cpp",
                 "${workspaceFolder}/src/vector.cpp",
                 "${workspaceFolder}/src/Physics.cpp",
+                "${workspaceFolder}/src/Texture.cpp",
+                "${workspaceFolder}/src/stb.cpp",
                 "-std=c++20",
                 "-L",
                 "/ucrt64/lib",
@@ -48,17 +50,26 @@
                 "-g",
                 "-I${workspaceFolder}/include",
                 "${workspaceFolder}/src/glad.c",
+                
                 "${workspaceFolder}/src/main.cpp",
+
                 "${workspaceFolder}/src/shaders/Shader.cpp",
                 "${workspaceFolder}/src/shaders/VertexShader.cpp",
                 "${workspaceFolder}/src/shaders/FragmentShader.cpp",
                 "${workspaceFolder}/src/shaders/ShaderProgram.cpp",
+
                 "${workspaceFolder}/src/Object.cpp",
+
                 "${workspaceFolder}/src/VAO.cpp",
                 "${workspaceFolder}/src/VBO.cpp",
                 "${workspaceFolder}/src/EBO.cpp",
+
                 "${workspaceFolder}/src/vector.cpp",
                 "${workspaceFolder}/src/Physics.cpp",
+
+                "${workspaceFolder}/src/Texture.cpp",
+                "${workspaceFolder}/src/stb.cpp",
+
                 "-std=c++20",
                 "-L${workspaceFolder}/lib-arm64",
                 "-lglfw3",
