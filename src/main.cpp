@@ -162,9 +162,9 @@ int main()
     // ------------------------------------------------------------------
     float vertices[] = {
          0.5f,  0.5f, 0.0f,  0.7f, 1.0f, // top right
-         0.5f, -0.5f, 0.0f,  0.7f, 0.0f,// bottom right
-        -0.5f, -0.5f, 0.0f,  0.3f, 0.0f,// bottom left
-        -0.5f,  0.5f, 0.0f,   0.3f, 1.0f// top left 
+         0.5f, -0.5f, 0.0f,  0.8f, 0.2f,// bottom right
+        -0.5f, -0.5f, 0.0f,  0.1f, 0.0f,// bottom left
+        -0.5f,  0.5f, 0.0f,  0.3f, 0.9f// top left 
     };
     unsigned int indices[] = {  // note that we start from 0!
         0, 1, 3,  // first Triangle

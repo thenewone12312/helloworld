@@ -3,6 +3,7 @@
 Texture::Texture(const std::string& path)
     : width(0), height(0), channels(0), data(nullptr), ID(0)
 {
+    stbi_set_flip_vertically_on_load(true);
     data = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb_alpha);
     if (!data) {
         std::cerr << "Failed to load texture: " << path << " - " << stbi_failure_reason() << std::endl;
