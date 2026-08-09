@@ -19,6 +19,8 @@
 #include "VBO.h"
 #include "EBO.h"
 
+#include "Texture.h"
+
 #include "vector.h"
 
 
@@ -159,10 +161,10 @@ int main()
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
+         0.5f,  0.5f, 0.0f,  0.7f, 1.0f, // top right
+         0.5f, -0.5f, 0.0f,  0.7f, 0.0f,// bottom right
+        -0.5f, -0.5f, 0.0f,  0.3f, 0.0f,// bottom left
+        -0.5f,  0.5f, 0.0f,   0.3f, 1.0f// top left 
     };
     unsigned int indices[] = {  // note that we start from 0!
         0, 1, 3,  // first Triangle
@@ -178,6 +180,8 @@ int main()
         1.0f);
         // std::cout << "uColor location: " << color << std::endl;
 
+    GLuint tex0 = glGetUniformLocation(shaderProgram.getID(), "tex0");
+
     
     VAO vao;
     vao.bind();
@@ -185,10 +189,16 @@ int main()
     VBO vbo(vertices, sizeof(vertices));
     EBO ebo(indices, sizeof(indices));
 
-    vao.linkVBO(vbo, 0);
+    vao.linkAttrib(vbo, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0); // position attribute
+    vao.linkAttrib(vbo, 1, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float))); // texture coord attribute
     vao.unbind();
     vbo.unbind();
     ebo.unbind();
+
+    auto texturePath = exePath / ".." / "textures" / "sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png";
+    Texture texture(texturePath.string());
+    shaderProgram.use();
+    glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
 
 
     // glGenVertexArrays(1, &VAO);
@@ -248,10 +258,14 @@ int main()
 
         shaderProgram.use();
         glUniform4f(color, colorValue.x, colorValue.y, colorValue.z, colorValue.w);
+
+        shaderProgram.use();
+        glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
+        texture.bind();
         
         // glUniform4f(color, 0, 0, 0, 0);
 
-        glUseProgram(shaderProgram.getID());
+        shaderProgram.use();
         vao.bind(); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         //glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

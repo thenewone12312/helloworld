@@ -11,8 +11,8 @@ Shader::Shader(const char* shaderSource, GLenum shaderType)
     //constructor
     ID = glCreateShader(shaderType);
     std::string code = loadFile(shaderSource);
-    std::cout << "Shader source:\n";
-    std::cout << code << "\n";
+    // std::cout << "Shader source:\n";
+    // std::cout << code << "\n";
     const char* codeCStr = code.c_str();
 
     glShaderSource(ID, 1, &codeCStr, nullptr);

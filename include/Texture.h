@@ -10,11 +10,15 @@ class Texture {
 public:
     Texture(const std::string& path);
     ~Texture();
+
+    void bind();
+    void unbind();
+    void Delete();
     
-    GLuint getID() const;
+    unsigned int getID();
 
 private:
     int width, height, channels;
     unsigned char* data;
-    GLuint ID;
+    unsigned int ID;
 };
