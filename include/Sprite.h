@@ -9,10 +9,10 @@
 
 class Sprite{
     public:
-        Sprite(std::vector<vec2>* vertices, Texture* texture);
+        Sprite(std::vector<vec2>* vertices, Texture* texture=nullptr);
 
     private:
-        std::vector<vec2>* vertices;
+        ;
         Texture* texture;
 
 };

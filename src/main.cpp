@@ -62,6 +62,22 @@ const unsigned int SCR_HEIGHT = 600;
 //     "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 //     "}\n\0";
 
+bool keyIsPressed(int key, GLFWwindow* window){
+    if(glfwGetKey(window, key) == GLFW_PRESS){
+        return true;
+    }
+    return false;
+}
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow *window)
+{
+    if (keyIsPressed(GLFW_KEY_ESCAPE, window)){
+        glfwSetWindowShouldClose(window, true);
+    }
+}
+
+
 int main()
 {
     //random initialization
@@ -182,6 +198,8 @@ int main()
 
     GLuint tex0 = glGetUniformLocation(shaderProgram.getID(), "tex0");
 
+    int transformLoc = glGetUniformLocation(shaderProgram.getID(), "transform");
+    vec3 transform(0.0f);
     
     VAO vao;
     vao.bind();
@@ -190,7 +208,7 @@ int main()
     EBO ebo(indices, sizeof(indices));
 
     vao.linkAttrib(vbo, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0); // position attribute
-    vao.linkAttrib(vbo, 1, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float))); // texture coord attribute
+    vao.linkAttrib(vbo, 2, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float))); // texture coord attribute
     vao.unbind();
     vbo.unbind();
     ebo.unbind();
@@ -244,8 +262,12 @@ int main()
     ); // Initial color value
     // render loop
     // -----------
+    double prevTime = glfwGetTime();
+
     while (!glfwWindowShouldClose(window))
     {
+        double currentTime = glfwGetTime();
+        float deltaTime = currentTime - prevTime;
         // input
         // -----
         processInput(window);
@@ -261,6 +283,12 @@ int main()
         colorValue.z = std::min(std::clamp(dis(gen),colorValue_prev.z - 0.01f, colorValue_prev.z + 0.01f), 0.9f); // Random blue component
 
         colorValue_prev = colorValue; // Update previous color value
+
+        if(keyIsPressed(GLFW_KEY_UP, window)){
+            transform += vec3(0.0f, 0.5f, 0.0f)*deltaTime;
+        };
+
+        glUniform3f(transformLoc, transform.x, transform.y, transform.z);
 
         shaderProgram.use();
         glUniform4f(color, colorValue.x, colorValue.y, colorValue.z, colorValue.w);
@@ -281,6 +309,7 @@ int main()
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
+        prevTime = currentTime;
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
@@ -295,13 +324,9 @@ int main()
     return 0;
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
+
+
+
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
