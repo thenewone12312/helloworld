@@ -23,7 +23,7 @@
                 "${workspaceFolder}/src/Physics.cpp",
                 "${workspaceFolder}/src/Texture.cpp",
                 "${workspaceFolder}/src/stb.cpp",
-                "-std=c++20",
+                "-std=c++26",
                 "-L",
                 "/ucrt64/lib",
                 "-lglfw3",
@@ -50,8 +50,10 @@
                 "-g",
                 "-I${workspaceFolder}/include",
                 "${workspaceFolder}/src/glad.c",
-                
+
                 "${workspaceFolder}/src/main.cpp",
+
+                "${workspaceFolder}/src/Input.cpp",
 
                 "${workspaceFolder}/src/shaders/Shader.cpp",
                 "${workspaceFolder}/src/shaders/VertexShader.cpp",
@@ -70,7 +72,7 @@
                 "${workspaceFolder}/src/Texture.cpp",
                 "${workspaceFolder}/src/stb.cpp",
 
-                "-std=c++20",
+                "-std=c++26",
                 "-L${workspaceFolder}/lib-arm64",
                 "-lglfw3",
                 "-framework",
@@ -122,7 +124,7 @@
                 "${workspaceFolder}/src/vector.cpp",
                 "${workspaceFolder}/src/Physics.cpp",
                 "${workspaceFolder}/src/stb.cpp",
-                "-std=c++20",
+                "-std=c++26",
                 "-LC:\\msys64\\mingw64\\lib",
                 "-lglfw3",
                 "-lopengl32",

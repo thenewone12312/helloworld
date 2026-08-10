@@ -23,6 +23,15 @@
 
 #include "vector.h"
 
+//input shinanigans
+#include "Input.h"
+Input input;
+
+std::vector<std::string> actionQueue;
+//callback for input events
+
+
+
 
 #ifdef _WIN32
 static std::filesystem::path getExecutablePath()
@@ -41,6 +50,8 @@ static std::filesystem::path getExecutablePath()
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+bool keyIsPressed(int key, GLFWwindow* window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -68,12 +79,59 @@ bool keyIsPressed(int key, GLFWwindow* window){
     }
     return false;
 }
+
+
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
 {
-    if (keyIsPressed(GLFW_KEY_ESCAPE, window)){
+    if (keyIsPressed(input.translateToKeyID("pause"), window)){
         glfwSetWindowShouldClose(window, true);
+    }
+    if (keyIsPressed(input.translateToKeyID("menu"), window))
+    {
+        //menu() or inv() or smth
+    }
+    //use translate here for faster input
+    //instead of calls and event listening
+    if((keyIsPressed(input.translateToKeyID("up"), window))){
+        transform += vec3(0.0f, 0.5f, 0.0f)*deltaTime;
+    };
+    if(keyIsPressed(input.translateToKeyID("down"), window)){
+        transform += vec3(0.0f, -0.5f, 0.0f)*deltaTime;
+    };
+    if(keyIsPressed(input.translateToKeyID("left"), window)){
+        transform += vec3(-0.5f, 0.0f, 0.0f)*deltaTime;
+    };
+    if(keyIsPressed(input.translateToKeyID("right"), window)){
+        transform += vec3(0.5f, 0.0f, 0.0f)*deltaTime;
+    };
+
+    //additionally we'll have to process queued nonmovement related inputs
+    if(!actionQueue.empty())
+    {
+        
+    }
+}
+
+//queues actions on keycallbacks to be executed on in render loop
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (action == GLFW_PRESS && 
+        !(
+            key == input.translateToKeyID("up")||
+            key == input.translateToKeyID("down")||
+            key == input.translateToKeyID("left")||
+            key == input.translateToKeyID("right")||
+            key == input.translateToKeyID("dodge")))
+    {
+        std::string temp = input.translateToAction(key);
+        //this isnt an error ignore it its fine it'll compile fine
+        if (!std::ranges::contains(actionQueue, temp))
+        {
+            std::cout << "action queued: " << temp << std::endl;
+            actionQueue.push_back(temp);
+        }
     }
 }
 
@@ -115,6 +173,9 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    //set up input callbacks
+    glfwSetKeyCallback(window, keyCallback);
 
 
     // build and compile our shader program
@@ -270,7 +331,7 @@ int main()
         float deltaTime = currentTime - prevTime;
         // input
         // -----
-        processInput(window);
+        
 
         // render
         // ------
@@ -284,27 +345,27 @@ int main()
 
         colorValue_prev = colorValue; // Update previous color value
 
-        if(keyIsPressed(GLFW_KEY_UP, window)){
-            transform += vec3(0.0f, 0.5f, 0.0f)*deltaTime;
-        };
+        
 
         glUniform3f(transformLoc, transform.x, transform.y, transform.z);
 
         shaderProgram.use();
         glUniform4f(color, colorValue.x, colorValue.y, colorValue.z, colorValue.w);
 
-        shaderProgram.use();
+        // shaderProgram.use();
         glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
         texture.bind();
         
         // glUniform4f(color, 0, 0, 0, 0);
-
-        shaderProgram.use();
+//why is shaderProgram.used so many times?
+        // shaderProgram.use();
         vao.bind(); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         //glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         // glBindVertexArray(0); // no need to unbind it every time 
- 
+        
+        processInput(window, deltaTime, transform);
+
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -324,6 +385,23 @@ int main()
     return 0;
 }
 
+// void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+// {
+//     if (action == GLFW_PRESS);
+//         //input.keyPressed(key);
+//     if((key == GLFW_KEY_UP)){
+//         transform += vec3(0.0f, 0.5f, 0.0f)*deltaTime;
+//     };
+//     if(keyIsPressed(GLFW_KEY_DOWN, window)){
+//         transform += vec3(0.0f, -0.5f, 0.0f)*deltaTime;
+//     };
+//     if(keyIsPressed(GLFW_KEY_LEFT, window)){
+//         transform += vec3(-0.5f, 0.0f, 0.0f)*deltaTime;
+//     };
+//     if(keyIsPressed(GLFW_KEY_RIGHT, window)){
+//         transform += vec3(0.5f, 0.0f, 0.0f)*deltaTime;
+//     };
+// }   
 
 
 
