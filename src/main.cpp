@@ -28,6 +28,16 @@
 Input input;
 
 std::vector<std::string> actionQueue;
+std::vector<std::string> actionQueueIgnore = 
+{
+    "up",
+    "down",
+    "left",
+    "right",
+    "dodge",
+  //  "menu",
+    "pause"
+};
 //callback for input events
 
 
@@ -88,12 +98,11 @@ void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
     if (keyIsPressed(input.translateToKeyID("pause"), window)){
         glfwSetWindowShouldClose(window, true);
     }
-    if (keyIsPressed(input.translateToKeyID("menu"), window))
-    {
-        //menu() or inv() or smth
-    }
-    //use translate here for faster input
-    //instead of calls and event listening
+    // if (keyIsPressed(input.translateToKeyID("menu"), window))
+    // {
+    //     //menu() or inv() or smth
+    // }
+
     if((keyIsPressed(input.translateToKeyID("up"), window))){
         transform += vec3(0.0f, 0.5f, 0.0f)*deltaTime;
     };
@@ -117,13 +126,8 @@ void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
 //queues actions on keycallbacks to be executed on in render loop
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (action == GLFW_PRESS && 
-        !(
-            key == input.translateToKeyID("up")||
-            key == input.translateToKeyID("down")||
-            key == input.translateToKeyID("left")||
-            key == input.translateToKeyID("right")||
-            key == input.translateToKeyID("dodge")))
+    if (action == GLFW_PRESS && input.translateToAction(key) != std::string() &&
+        !(std::ranges::contains(actionQueueIgnore, input.translateToAction(key)))) //not an ignore input
     {
         std::string temp = input.translateToAction(key);
         //this isnt an error ignore it its fine it'll compile fine
@@ -261,6 +265,8 @@ int main()
 
     int transformLoc = glGetUniformLocation(shaderProgram.getID(), "transform");
     vec3 transform(0.0f);
+    vec3 velocity(0.0f);
+    float speed = 0.01f;
     
     VAO vao;
     vao.bind();
@@ -364,7 +370,12 @@ int main()
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         // glBindVertexArray(0); // no need to unbind it every time 
         
-        processInput(window, deltaTime, transform);
+        //movement stuff
+        //prevents miku from moving faster diagonally than straight
+        processInput(window, deltaTime, velocity);
+        velocity.normalize();
+        transform += velocity * speed;
+        velocity = 0.0f;
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
