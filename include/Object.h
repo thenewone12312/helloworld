@@ -21,6 +21,7 @@ class Object{
         void setSprite(Sprite* Sprite);
         Sprite* getSprite();
         void draw();
+        void uploadMesh();
 
     private:
         vec2 position;
@@ -30,4 +31,5 @@ class Object{
         Sprite* sprite;
         vec2 normal;
         unsigned int VBO, VAO, EBO;
+        GLsizei indexCount = 0;
 };

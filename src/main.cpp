@@ -26,11 +26,14 @@
 
 #include "vector.h"
 
-//input shinanigans
+// input system
 #include "Input.h"
 Input input;
 
+// queued actions from key presses that should be handled in the render loop
 std::vector<std::string> actionQueue;
+
+// actions ignored by the key callback because they are handled directly in processInput
 std::vector<std::string> actionQueueIgnore = 
 {
     "up",
@@ -41,7 +44,8 @@ std::vector<std::string> actionQueueIgnore =
   //  "menu",
     "pause"
 };
-//callback for input events
+
+// callback registration happens in main()
 
 
 
@@ -70,18 +74,14 @@ bool keyIsPressed(int key, GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-
-
+// helper returns whether the given GLFW key is currently pressed
 bool keyIsPressed(int key, GLFWwindow* window){
-    if(glfwGetKey(window, key) == GLFW_PRESS){
-        return true;
-    }
-    return false;
+    return glfwGetKey(window, key) == GLFW_PRESS;
 }
 
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
+// Movement keys are handled immediately, while queued actions are deferred into the render loop.
 void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
 {
     if (keyIsPressed(input.translateToKeyID("pause"), window)){
@@ -92,39 +92,47 @@ void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
     //     //menu() or inv() or smth
     // }
 
-    if((keyIsPressed(input.translateToKeyID("up"), window))){
-        transform += vec3(0.0f, 0.5f, 0.0f)*deltaTime;
-    };
-    if(keyIsPressed(input.translateToKeyID("down"), window)){
-        transform += vec3(0.0f, -0.5f, 0.0f)*deltaTime;
-    };
-    if(keyIsPressed(input.translateToKeyID("left"), window)){
-        transform += vec3(-0.5f, 0.0f, 0.0f)*deltaTime;
-    };
-    if(keyIsPressed(input.translateToKeyID("right"), window)){
-        transform += vec3(0.5f, 0.0f, 0.0f)*deltaTime;
-    };
+    if (keyIsPressed(input.translateToKeyID("up"), window)){
+        transform += vec3(0.0f, 0.5f, 0.0f) * deltaTime;
+    }
+    if (keyIsPressed(input.translateToKeyID("down"), window)){
+        transform += vec3(0.0f, -0.5f, 0.0f) * deltaTime;
+    }
+    if (keyIsPressed(input.translateToKeyID("left"), window)){
+        transform += vec3(-0.5f, 0.0f, 0.0f) * deltaTime;
+    }
+    if (keyIsPressed(input.translateToKeyID("right"), window)){
+        transform += vec3(0.5f, 0.0f, 0.0f) * deltaTime;
+    }
 
-    //additionally we'll have to process queued nonmovement related inputs
-    if(!actionQueue.empty())
+    // additionally we'll have to process queued non-movement related inputs
+    if (!actionQueue.empty())
     {
         
     }
 }
 
-//queues actions on keycallbacks to be executed on in render loop
+// queues non-movement actions from the key callback for processing in the render loop
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (action == GLFW_PRESS && input.translateToAction(key) != std::string() &&
-        !(std::ranges::contains(actionQueueIgnore, input.translateToAction(key)))) //not an ignore input
+    if (action != GLFW_PRESS) {
+        return;
+    }
+
+    std::string temp = input.translateToAction(key);
+    if (temp.empty()) {
+        return; // unknown key, no mapped action
+    }
+
+    // ignore movement/key actions already handled by processInput
+    if (std::ranges::contains(actionQueueIgnore, temp)) {
+        return;
+    }
+
+    if (!std::ranges::contains(actionQueue, temp))
     {
-        std::string temp = input.translateToAction(key);
-        //this isnt an error ignore it its fine it'll compile fine
-        if (!std::ranges::contains(actionQueue, temp))
-        {
-            std::cout << "action queued: " << temp << std::endl;
-            actionQueue.push_back(temp);
-        }
+        std::cout << "action queued: " << temp << std::endl;
+        actionQueue.push_back(temp);
     }
 }
 
@@ -187,6 +195,8 @@ int main()
 
     ShaderProgram shaderProgram(vertexShader, fragmentShader);    // shaderProgram.checkErrors();
 
+    //shaderprogram is now complete
+
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     // float vertices[] = {
@@ -200,15 +210,17 @@ int main()
     //     1, 2, 3   // second Triangle
     // };
 
-    //color stuff
-    unsigned int colorLoc = glGetUniformLocation(shaderProgram.getID(), "uColor");
-    vec4 colorValue(//red|green|blue|alpha
-        1.0f, 
-        1.0f, 
-        1.0f, 
-        1.0f);
-        // std::cout << "uColor location: " << colorLoc << std::endl;
+    // //color stuff
+    // unsigned int colorLoc = glGetUniformLocation(shaderProgram.getID(), "uColor");
+    // vec4 colorValue(//red|green|blue|alpha
+    //     1.0f, 
+    //     1.0f, 
+    //     1.0f, 
+    //     1.0f);
+    //     // std::cout << "uColor location: " << colorLoc << std::endl;
 
+    //dunno what this does
+    //VICTOR COMMENT THIS EXPLAIN WHAT ITS FOR
     GLuint tex0 = glGetUniformLocation(shaderProgram.getID(), "tex0");
 
     int transformLoc = glGetUniformLocation(shaderProgram.getID(), "transform");
@@ -228,6 +240,7 @@ int main()
     // vbo.unbind();
     // ebo.unbind();
 
+    //bind textures 
 #ifdef _WIN32
     auto texturePath = exePath / ".." / "textures" / "sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png";
     Texture texture(texturePath.string());
@@ -238,6 +251,7 @@ int main()
     shaderProgram.use();
     glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
 
+    //CREATED MIKU
     Object miku(&texture);
 
     vec4 colorValue_prev(
