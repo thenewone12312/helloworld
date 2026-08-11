@@ -254,7 +254,7 @@ int main()
 #endif
 #ifdef __APPLE__
     Texture texture("../textures/sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png");
-    Texture teto_texture("../textures/teto.jpeg");
+    Texture teto_texture("../textures/MODEUS.jpeg");
 #endif
     shaderProgram.use();
     glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
