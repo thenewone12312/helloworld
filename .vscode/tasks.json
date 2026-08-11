@@ -121,6 +121,8 @@
                 "${workspaceFolder}/src/VAO.cpp",
                 "${workspaceFolder}/src/VBO.cpp",
                 "${workspaceFolder}/src/EBO.cpp",
+                "${workspaceFolder}/src/Sprite.cpp",
+                "${workspaceFolder}/src/Polygon.cpp",
                 "${workspaceFolder}/src/Texture.cpp",
                 "${workspaceFolder}/src/vector.cpp",
                 "${workspaceFolder}/src/Physics.cpp",

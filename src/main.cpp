@@ -19,6 +19,9 @@
 #include "VBO.h"
 #include "EBO.h"
 
+#include "Object.h"
+#include "Sprite.h"
+#include "Polygon.h"
 #include "Texture.h"
 
 #include "vector.h"
@@ -186,16 +189,16 @@ int main()
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-    float vertices[] = {
-         0.5f,  0.5f, 0.0f,  0.7f, 1.0f, // top right
-         0.5f, -0.5f, 0.0f,  0.8f, 0.2f,// bottom right
-        -0.5f, -0.5f, 0.0f,  0.1f, 0.0f,// bottom left
-        -0.5f,  0.5f, 0.0f,  0.3f, 0.9f// top left 
-    };
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,  // first Triangle
-        1, 2, 3   // second Triangle
-    };
+    // float vertices[] = {
+    //      0.5f,  0.5f, 0.0f,  0.7f, 1.0f, // top right
+    //      0.5f, -0.5f, 0.0f,  0.8f, 0.2f,// bottom right
+    //     -0.5f, -0.5f, 0.0f,  0.1f, 0.0f,// bottom left
+    //     -0.5f,  0.5f, 0.0f,  0.3f, 0.9f// top left 
+    // };
+    // unsigned int indices[] = {  // note that we start from 0!
+    //     0, 1, 3,  // first Triangle
+    //     1, 2, 3   // second Triangle
+    // };
 
     //color stuff
     unsigned int colorLoc = glGetUniformLocation(shaderProgram.getID(), "uColor");
@@ -213,17 +216,17 @@ int main()
     vec3 velocity(0.0f);
     float speed = 1.0f;
     
-    VAO vao;
-    vao.bind();
+    // VAO vao;
+    // vao.bind();
 
-    VBO vbo(vertices, sizeof(vertices));
-    EBO ebo(indices, sizeof(indices));
+    // VBO vbo(vertices, sizeof(vertices));
+    // EBO ebo(indices, sizeof(indices));
 
-    vao.linkAttrib(vbo, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0); // position attribute
-    vao.linkAttrib(vbo, 2, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float))); // texture coord attribute
-    vao.unbind();
-    vbo.unbind();
-    ebo.unbind();
+    // vao.linkAttrib(vbo, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0); // position attribute
+    // vao.linkAttrib(vbo, 2, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float))); // texture coord attribute
+    // vao.unbind();
+    // vbo.unbind();
+    // ebo.unbind();
 
 #ifdef _WIN32
     auto texturePath = exePath / ".." / "textures" / "sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png";
@@ -235,6 +238,7 @@ int main()
     shaderProgram.use();
     glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
 
+    Object miku(&texture);
 
     vec4 colorValue_prev(
         0.2f, 
@@ -259,38 +263,42 @@ int main()
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // draw our first triangle
-        colorValue.x = std::min(std::clamp(dis(gen),colorValue_prev.x - 0.01f, colorValue_prev.x + 0.01f), 0.9f); // Random red component
-        colorValue.y = std::min(std::clamp(dis(gen),colorValue_prev.y - 0.01f, colorValue_prev.y + 0.01f), 0.9f); // Random green component
-        colorValue.z = std::min(std::clamp(dis(gen),colorValue_prev.z - 0.01f, colorValue_prev.z + 0.01f), 0.9f); // Random blue component
-
-        colorValue_prev = colorValue; // Update previous colorLoc value
-
-        
-
-        glUniform3f(transformLoc, transform.x, transform.y, transform.z);
-
         shaderProgram.use();
-        glUniform4f(colorLoc, colorValue.x, colorValue.y, colorValue.z, colorValue.w);
+        glUniform1i(tex0, 0);
+        miku.draw();
 
-        // shaderProgram.use();
-        glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
-        texture.bind();
+//         // draw our first triangle
+//         colorValue.x = std::min(std::clamp(dis(gen),colorValue_prev.x - 0.01f, colorValue_prev.x + 0.01f), 0.9f); // Random red component
+//         colorValue.y = std::min(std::clamp(dis(gen),colorValue_prev.y - 0.01f, colorValue_prev.y + 0.01f), 0.9f); // Random green component
+//         colorValue.z = std::min(std::clamp(dis(gen),colorValue_prev.z - 0.01f, colorValue_prev.z + 0.01f), 0.9f); // Random blue component
+
+//         colorValue_prev = colorValue; // Update previous colorLoc value
+
         
-        // glUniform4f(color, 0, 0, 0, 0);
-//why is shaderProgram.used so many times?
-        // shaderProgram.use();
-        vao.bind(); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // glBindVertexArray(0); // no need to unbind it every time 
+
+//         glUniform3f(transformLoc, transform.x, transform.y, transform.z);
+
+//         shaderProgram.use();
+//         glUniform4f(colorLoc, colorValue.x, colorValue.y, colorValue.z, colorValue.w);
+
+//         // shaderProgram.use();
+//         glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
+//         texture.bind();
         
-        //movement stuff
-        //prevents miku from moving faster diagonally than straight
-        processInput(window, deltaTime, velocity);
-        velocity.normalize();
-        transform += velocity * speed* deltaTime;
-        velocity = 0.0f;
+//         // glUniform4f(color, 0, 0, 0, 0);
+// //why is shaderProgram.used so many times?
+//         // shaderProgram.use();
+//         // vao.bind(); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+//         //glDrawArrays(GL_TRIANGLES, 0, 6);
+//         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//         // glBindVertexArray(0); // no need to unbind it every time 
+        
+//         //movement stuff
+//         //prevents miku from moving faster diagonally than straight
+//         processInput(window, deltaTime, velocity);
+//         velocity.normalize();
+//         transform += velocity * speed* deltaTime;
+//         velocity = 0.0f;
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

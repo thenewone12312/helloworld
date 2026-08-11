@@ -4,16 +4,24 @@
 #include <vector>
 
 #include "vector.h"
-#include "Polygon.h"
+#include <memory>
 #include "Texture.h"
 
+class Polygon;
 
 class Sprite{
     public:
-        Sprite(std::vector<vec2>* vertices, Texture* texture=nullptr);
+        Sprite(std::vector<float>* vertices, std::vector<unsigned int>* indices=nullptr, Texture* texture=nullptr);
+        Sprite(Texture* texture);
+        Sprite();
+        ~Sprite();
+        std::vector<float> getVertexData();
+        std::vector<unsigned int> getIndexData();
+        Texture* getTexture();
 
     private:
-        Polygon* shape;
+        void* textureUV;
         Texture* texture;
+        vec2 scale;
 
 };

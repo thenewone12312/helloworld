@@ -5,8 +5,8 @@ Property::Property(std::string name, unsigned int numValues){
     this->numValues = numValues;
 };
 
-Polygon::Polygon(const std::vector<float>& data, const std::vector<Property>& properties, bool position, bool color, bool texture)
-    : vertices(data), properties(properties) {
+Polygon::Polygon(const std::vector<float>& data, const std::vector<unsigned int>& indices, const std::vector<Property>& properties, bool position, bool color, bool texture)
+    : vertices(data), indices(indices), properties(properties) {
     bool empty = false;
     if(data.empty()){
         empty = true;
@@ -32,30 +32,28 @@ Polygon::Polygon(const std::vector<float>& data, const std::vector<Property>& pr
     }
 };
 
-Polygon::Polygon()
-    : Polygon(generateQuad()){
+Polygon::Polygon() {
+    this->vertices = generateQuad();
+    this->indices = {0, 1, 2,
+                     0, 2, 3};
     
 };
 
-Polygon::Polygon(vec2 scale)
-    : Polygon(generateQuad(scale)){
+// Polygon::Polygon(vec2 scale)
+//     : Polygon(generateQuad(scale)){
 
-};
+// };
 
-Polygon::Polygon(float width, float height)
-    : Polygon(generateQuad(width, height)){
+// Polygon::Polygon(float width, float height)
+//     : Polygon(generateQuad(width, height)){
 
-};
+// };
 
-std::vector<float> generateQuad(){
+std::vector<float> Polygon::generateQuad(){
     return {0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
             1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
             1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
-};
-
-std::vector<float> generateQuad(){
-    
 };
 
 void Polygon::setProperties(const std::vector<Property>& properties){
@@ -75,8 +73,9 @@ void Polygon::addProperty(std::string name, unsigned int numValues, const std::v
 
 // };
 
-void Polygon::setVertices(const std::vector<float>& data){
+void Polygon::setVertices(const std::vector<float>& data, const std::vector<unsigned int>& indices){
     this->vertices = data;
+    this->indices = indices;
 };
 
 void Polygon::addVertices(const std::vector<float>& data){
@@ -85,6 +84,10 @@ void Polygon::addVertices(const std::vector<float>& data){
 
 std::vector<float> Polygon::getVertexData(){
     return vertices;
+};
+
+std::vector<unsigned int> Polygon::getIndexData(){
+    return indices;
 };
 
 unsigned int Polygon::calculateVertices(){

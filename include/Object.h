@@ -4,7 +4,8 @@
 
 class Object{
     public:
-        Object(vec2 position=vec2(0.0f), vec2 scale=vec2(1.0f), float rotationRadians=0.0f, Sprite* sprite=nullptr);
+        Object(Sprite* sprite);
+        Object(Texture* texture);
         void setPosition(vec2 position);
         vec2 getPosition();
         void addPosition(vec2 position);
@@ -19,6 +20,7 @@ class Object{
         void rotateRadians(float radians);
         void setSprite(Sprite* Sprite);
         Sprite* getSprite();
+        void draw();
 
     private:
         vec2 position;
@@ -27,4 +29,5 @@ class Object{
         float rotationRadians;
         Sprite* sprite;
         vec2 normal;
+        unsigned int VBO, VAO, EBO;
 };

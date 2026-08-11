@@ -1,10 +1,42 @@
 #include "Object.h"
+#include "Polygon.h"
 
-Object::Object(vec2 position, vec2 scale, float rotationRadians , Sprite* sprite){
-    this->position = position;
-    this->scale = scale;
-    this->rotationRadians = rotationRadians;
-    this->sprite = sprite;
+Object::Object(Sprite* sprite){
+    this->position = vec2(0.0f, 0.0f);
+    this->scale = vec2(0.0f, 0.0f);
+    this->rotationRadians = 0.0f;
+    this->VAO = 0;
+    this->VBO = 0;
+    this->EBO = 0;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    if(sprite != nullptr){
+        this->sprite = sprite;
+    }
+    else{
+        this->sprite = new Sprite();
+    }
+};
+
+Object::Object(Texture* texture){
+    this->position = vec2(0.0f, 0.0f);
+    this->scale = vec2(0.0f, 0.0f);
+    this->rotationRadians = 0.0f;
+    this->VAO = 0;
+    this->VBO = 0;
+    this->EBO = 0;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    if(texture != nullptr){
+        this->sprite = new Sprite(texture);
+    }
+    else{
+        this->sprite = new Sprite();
+    }
 };
 
 void Object::setPosition(vec2 position){
@@ -57,3 +89,75 @@ void Object::setSprite(Sprite* sprite){
     this->sprite = sprite;
 };
 
+void Object::draw()
+{
+    if (sprite == nullptr)
+        return;
+
+    
+
+    // Obtain vertex/index data from the sprite
+    std::vector<float> vertices = sprite->getVertexData();
+    std::vector<unsigned int> indices = sprite->getIndexData();
+    if (vertices.empty() || indices.empty())
+        return;
+
+    // Bind VAO
+    glBindVertexArray(VAO);
+
+    // Upload vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        vertices.size() * sizeof(float),
+        vertices.data(),
+        GL_STATIC_DRAW
+    );
+
+    // Upload index data
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER,
+        indices.size() * sizeof(int),
+        indices.data(),
+        GL_STATIC_DRAW
+    );
+
+    // Position: x, y, z
+    glVertexAttribPointer(
+        0,
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        5 * sizeof(float),
+        (void*)0
+    );
+    glEnableVertexAttribArray(0);
+
+    // Texture coordinates: u, v
+    glVertexAttribPointer(
+        2,
+        2,
+        GL_FLOAT,
+        GL_FALSE,
+        5 * sizeof(float),
+        (void*)(3 * sizeof(float))
+    );
+    glEnableVertexAttribArray(2);
+
+    // Bind texture
+    if (sprite->getTexture() != nullptr) {
+        glActiveTexture(GL_TEXTURE0);
+        sprite->getTexture()->bind();
+    }
+
+    // Draw
+    glDrawElements(
+        GL_TRIANGLES,
+        static_cast<GLsizei>(indices.size()),
+        GL_UNSIGNED_INT,
+        nullptr
+    );
+
+    glBindVertexArray(0);
+};
