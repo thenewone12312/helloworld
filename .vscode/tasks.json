@@ -24,6 +24,8 @@
                 "${workspaceFolder}/src/Texture.cpp",
                 "${workspaceFolder}/src/stb.cpp",
                 "${workspaceFolder}/src/Input.cpp",
+                "${workspaceFolder}/src/Sprite.cpp",
+                "${workspaceFolder}/src/Polygon.cpp",
                 "-std=c++26",
                 "-L",
                 "/ucrt64/lib",
@@ -71,6 +73,8 @@
                 "${workspaceFolder}/src/Physics.cpp",
 
                 "${workspaceFolder}/src/Texture.cpp",
+                "${workspaceFolder}/src/Sprite.cpp",
+                "${workspaceFolder}/src/Polygon.cpp",
                 "${workspaceFolder}/src/stb.cpp",
 
                 "-std=c++26",
