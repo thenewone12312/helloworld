@@ -35,7 +35,7 @@ Polygon::Polygon(const std::vector<float>& data, const std::vector<unsigned int>
 Polygon::Polygon() {
     this->vertices = generateQuad();
     this->indices = {0, 1, 2,
-                     0, 2, 3};
+                     1, 2, 3};
     
 };
 
