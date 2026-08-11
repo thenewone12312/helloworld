@@ -37,6 +37,7 @@ Object::Object(Sprite* sprite){
     else{
         this->sprite = new Sprite();
     }
+    uploadMesh();
 };
 
 Object::Object(Texture* texture){
@@ -56,6 +57,7 @@ Object::Object(Texture* texture){
     else{
         this->sprite = new Sprite();
     }
+    uploadMesh();
 };
 
 void Object::setPosition(vec2 position){
@@ -68,6 +70,18 @@ vec2 Object::getPosition(){
 
 void Object::addPosition(vec2 position){
     this->position += position;
+};
+
+void Object::setSpeed(int speed){
+    this->speed = speed;
+};
+
+int Object::getSpeed() {
+    return this->speed;
+};
+
+void Object::addSpeed(int speed){
+    this->speed += speed;
 };
 
 void Object::setVelocity(vec2 velocity){
@@ -108,6 +122,19 @@ void Object::setSprite(Sprite* sprite){
     this->sprite = sprite;
 };
 
+void Object::processVelocity(float deltaTime)
+{
+    this->velocity.normalize();
+    this->position += velocity * this->speed* deltaTime;
+    velocity = 0.0f;
+}
+void Object::processVelocity(float deltaTime, vec2 velocity)
+{
+    velocity.normalize();
+    this->position += velocity * this->speed* deltaTime;
+    velocity = 0.0f;
+}
+
 //inital set up for the mesh stuff
 void Object::uploadMesh()
 {
@@ -147,11 +174,15 @@ void Object::uploadMesh()
 
 }
 
-void Object::draw()
+void Object::draw(int &transformLoc)
 {
     if (sprite == nullptr || indexCount ==0)
         return;
 
+    glUniform3f(transformLoc,
+            getPosition().x,
+            getPosition().y,
+            0.0f);
     
     //so we dont draw these everytime.
     // // Obtain vertex/index data from the sprite

@@ -48,7 +48,8 @@ std::vector<std::string> actionQueueIgnore =
 // callback registration happens in main()
 
 
-
+//OBJECT STUFF
+std::vector<Object> objectList;
 
 #ifdef _WIN32
 static std::filesystem::path getExecutablePath()
@@ -74,6 +75,8 @@ bool keyIsPressed(int key, GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+vec3 teto_transform;
+
 // helper returns whether the given GLFW key is currently pressed
 bool keyIsPressed(int key, GLFWwindow* window){
     return glfwGetKey(window, key) == GLFW_PRESS;
@@ -93,16 +96,30 @@ void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
     // }
 
     if (keyIsPressed(input.translateToKeyID("up"), window)){
-        transform += vec3(0.0f, 0.5f, 0.0f) * deltaTime;
+        transform += vec3(0.0f, 0.5f, 0.0f);
     }
     if (keyIsPressed(input.translateToKeyID("down"), window)){
-        transform += vec3(0.0f, -0.5f, 0.0f) * deltaTime;
+        transform += vec3(0.0f, -0.5f, 0.0f);
     }
     if (keyIsPressed(input.translateToKeyID("left"), window)){
-        transform += vec3(-0.5f, 0.0f, 0.0f) * deltaTime;
+        transform += vec3(-0.5f, 0.0f, 0.0f);
     }
     if (keyIsPressed(input.translateToKeyID("right"), window)){
-        transform += vec3(0.5f, 0.0f, 0.0f) * deltaTime;
+        transform += vec3(0.5f, 0.0f, 0.0f);
+    }
+
+    //TESTTETO
+    if (keyIsPressed(GLFW_KEY_W, window)){
+        teto_transform += vec3(0.0f, 0.5f, 0.0f);
+    }
+    if (keyIsPressed(GLFW_KEY_S, window)){
+        teto_transform += vec3(0.0f, -0.5f, 0.0f);
+    }
+    if (keyIsPressed(GLFW_KEY_A, window)){
+        teto_transform += vec3(-0.5f, 0.0f, 0.0f);
+    }
+    if (keyIsPressed(GLFW_KEY_D, window)){
+        teto_transform += vec3(0.5f, 0.0f, 0.0f);
     }
 
     // additionally we'll have to process queued non-movement related inputs
@@ -227,32 +244,30 @@ int main()
     vec3 transform(0.0f);
     vec3 velocity(0.0f);
     float speed = 1.0f;
-    
-    // VAO vao;
-    // vao.bind();
-
-    // VBO vbo(vertices, sizeof(vertices));
-    // EBO ebo(indices, sizeof(indices));
-
-    // vao.linkAttrib(vbo, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0); // position attribute
-    // vao.linkAttrib(vbo, 2, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float))); // texture coord attribute
-    // vao.unbind();
-    // vbo.unbind();
-    // ebo.unbind();
 
     //bind textures 
 #ifdef _WIN32
     auto texturePath = exePath / ".." / "textures" / "sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png";
     Texture texture(texturePath.string());
+    auto texturePath = exePath / ".." / "textures" / "teto.jpeg";
+    Texture teto_texture(texturePath.string());
 #endif
 #ifdef __APPLE__
     Texture texture("../textures/sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png");
+    Texture teto_texture("../textures/teto.jpeg");
 #endif
     shaderProgram.use();
     glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
 
+
+// OBJECT INITALIZATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     //CREATED MIKU
     Object miku(&texture);
+    objectList.push_back(miku);
+
+    Object teto(&teto_texture);
+    objectList.push_back(teto);
 
     vec4 colorValue_prev(
         0.2f, 
@@ -270,6 +285,7 @@ int main()
         float deltaTime = currentTime - prevTime;
         // input
         // -----
+        processInput(window, deltaTime, velocity);
         
 
         // render
@@ -279,40 +295,16 @@ int main()
 
         shaderProgram.use();
         glUniform1i(tex0, 0);
-        miku.draw();
-
-//         // draw our first triangle
-//         colorValue.x = std::min(std::clamp(dis(gen),colorValue_prev.x - 0.01f, colorValue_prev.x + 0.01f), 0.9f); // Random red component
-//         colorValue.y = std::min(std::clamp(dis(gen),colorValue_prev.y - 0.01f, colorValue_prev.y + 0.01f), 0.9f); // Random green component
-//         colorValue.z = std::min(std::clamp(dis(gen),colorValue_prev.z - 0.01f, colorValue_prev.z + 0.01f), 0.9f); // Random blue component
-
-//         colorValue_prev = colorValue; // Update previous colorLoc value
-
         
 
-//         glUniform3f(transformLoc, transform.x, transform.y, transform.z);
-
-//         shaderProgram.use();
-//         glUniform4f(colorLoc, colorValue.x, colorValue.y, colorValue.z, colorValue.w);
-
-//         // shaderProgram.use();
-//         glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
-//         texture.bind();
+        miku.processVelocity(deltaTime, vec2(velocity.x,velocity.y));
+        velocity = 0;
+        teto.processVelocity(deltaTime, vec2(teto_transform.x,teto_transform.y));
+        teto_transform=0;
         
-//         // glUniform4f(color, 0, 0, 0, 0);
-// //why is shaderProgram.used so many times?
-//         // shaderProgram.use();
-//         // vao.bind(); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-//         //glDrawArrays(GL_TRIANGLES, 0, 6);
-//         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-//         // glBindVertexArray(0); // no need to unbind it every time 
         
-//         //movement stuff
-//         //prevents miku from moving faster diagonally than straight
-//         processInput(window, deltaTime, velocity);
-//         velocity.normalize();
-//         transform += velocity * speed* deltaTime;
-//         velocity = 0.0f;
+        miku.draw(transformLoc);
+        teto.draw(transformLoc);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
