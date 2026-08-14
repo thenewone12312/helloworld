@@ -3,6 +3,7 @@ main
 main.exe
 helloworld
 helloworld.exe
+build/
 
 main.dSYM 16-18-54-599.dSYM
 

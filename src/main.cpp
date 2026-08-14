@@ -1,5 +1,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <imgui/imgui.h>
+#include <imgui/backends/imgui_impl_glfw.h>
+#include <imgui/backends/imgui_impl_opengl3.h>
+
 #include <iostream>
 #include <filesystem>
 
@@ -87,6 +92,11 @@ bool keyIsPressed(int key, GLFWwindow* window){
 // Movement keys are handled immediately, while queued actions are deferred into the render loop.
 void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
 {
+    // Let ImGui consume keyboard input while interacting with a UI control.
+    if (ImGui::GetIO().WantCaptureKeyboard) {
+        return;
+    }
+
     if (keyIsPressed(input.translateToKeyID("pause"), window)){
         glfwSetWindowShouldClose(window, true);
     }
@@ -142,11 +152,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
 
     // ignore movement/key actions already handled by processInput
-    if (std::ranges::contains(actionQueueIgnore, temp)) {
+    if (std::find(actionQueueIgnore.begin(), actionQueueIgnore.end(), temp) != actionQueueIgnore.end()) {
         return;
     }
 
-    if (!std::ranges::contains(actionQueue, temp))
+    if (std::find(actionQueue.begin(), actionQueue.end(), temp) == actionQueue.end())
     {
         std::cout << "action queued: " << temp << std::endl;
         actionQueue.push_back(temp);
@@ -194,6 +204,14 @@ int main()
 
     //set up input callbacks
     glfwSetKeyCallback(window, keyCallback);
+
+    // Set up Dear ImGui after GLFW and GLAD. Passing true lets the backend
+    // install its callbacks while preserving the key callback registered above.
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
 
 
     // build and compile our shader program
@@ -279,13 +297,20 @@ int main()
     // -----------
     double prevTime = glfwGetTime();
 
+    
     while (!glfwWindowShouldClose(window))
     {
         double currentTime = glfwGetTime();
         float deltaTime = currentTime - prevTime;
+        
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        
         // input
         // -----
         processInput(window, deltaTime, velocity);
+        ImGui::ShowDemoWindow();
         
 
         // render
@@ -303,8 +328,22 @@ int main()
         teto_transform=0;
         
         
-        miku.draw(transformLoc);
-        teto.draw(transformLoc);
+        // teto.draw(transformLoc);
+        // miku.draw(transformLoc);
+
+        // Dear ImGui is rendered after the game so the interface appears on top.
+        ImGui::Begin("Game controls");
+        ImGui::Text("Frame time: %.3f ms", deltaTime * 1000.0f);
+        ImGui::Text("Use arrow keys to move the first sprite.");
+        ImGui::Text("Use WASD to move the second sprite.");
+        if (ImGui::Button("Close game")) {
+            glfwSetWindowShouldClose(window, true);
+        }
+        
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -318,6 +357,10 @@ int main()
     // glDeleteVertexArrays(1, &VAO);
     // glDeleteBuffers(1, &VBO);
     // glDeleteBuffers(1, &EBO);
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
@@ -334,4 +377,3 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
-
