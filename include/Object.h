@@ -28,9 +28,11 @@ class Object{
         Sprite* getSprite();
         void draw(int &transformLoc);
         void uploadMesh();
-
+        
         void processVelocity(float deltaTime); //or whatever you wanna call it
         void processVelocity(float deltaTime, vec2 velocity);
+
+        static Object defaultObject;
 
     private:
         vec2 position;

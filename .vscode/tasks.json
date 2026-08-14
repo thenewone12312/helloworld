@@ -34,6 +34,7 @@
                 "${workspaceFolder}/src/Input.cpp",
                 "${workspaceFolder}/src/Sprite.cpp",
                 "${workspaceFolder}/src/Polygon.cpp",
+                "${workspaceFolder}/src/Player.cpp",
                 "-std=c++26",
                 "-L",
                 "/ucrt64/lib",
@@ -72,6 +73,8 @@
                 "${workspaceFolder}/include/imgui/backends/imgui_impl_opengl3.cpp",
 
                 "${workspaceFolder}/src/main.cpp",
+
+                "${workspaceFolder}/src/Player.cpp",
 
                 "${workspaceFolder}/src/Input.cpp",
 
@@ -156,6 +159,7 @@
                 "${workspaceFolder}/src/vector.cpp",
                 "${workspaceFolder}/src/Physics.cpp",
                 "${workspaceFolder}/src/stb.cpp",
+                "${workspaceFolder}/src/Player.cpp",
                 "${workspaceFolder}/src/Input.cpp",
                 "-std=c++26",
                 "-LC:\\msys64\\mingw64\\lib",

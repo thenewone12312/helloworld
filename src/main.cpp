@@ -35,6 +35,9 @@
 #include "Input.h"
 Input input;
 
+#include "Player.h"
+
+
 // queued actions from key presses that should be handled in the render loop
 std::vector<std::string> actionQueue;
 
@@ -90,7 +93,7 @@ bool keyIsPressed(int key, GLFWwindow* window){
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // Movement keys are handled immediately, while queued actions are deferred into the render loop.
-void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
+void processInput(GLFWwindow *window, float deltaTime, vec3& transform, Player *player = nullptr)
 {
     // Let ImGui consume keyboard input while interacting with a UI control.
     if (ImGui::GetIO().WantCaptureKeyboard) {
@@ -121,6 +124,7 @@ void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
     //TESTTETO
     if (keyIsPressed(GLFW_KEY_W, window)){
         teto_transform += vec3(0.0f, 0.5f, 0.0f);
+        
     }
     if (keyIsPressed(GLFW_KEY_S, window)){
         teto_transform += vec3(0.0f, -0.5f, 0.0f);
@@ -130,6 +134,17 @@ void processInput(GLFWwindow *window, float deltaTime, vec3& transform)
     }
     if (keyIsPressed(GLFW_KEY_D, window)){
         teto_transform += vec3(0.5f, 0.0f, 0.0f);
+    }
+
+    //TEST PLAYER
+    if (player!=nullptr)
+    {
+        if (keyIsPressed(GLFW_KEY_E, window)){
+            player->addHealth(-1*deltaTime);
+        }
+        if (keyIsPressed(GLFW_KEY_Q, window)){
+            player->addHealth(+1*deltaTime);
+        }
     }
 
     // additionally we'll have to process queued non-movement related inputs
@@ -205,7 +220,7 @@ int main()
     //set up input callbacks
     glfwSetKeyCallback(window, keyCallback);
 
-    // Set up Dear ImGui after GLFW and GLAD. Passing true lets the backend
+    // Set up Dear ImGui after GLFW and GLAD. Passing true lets the backend--------------------
     // install its callbacks while preserving the key callback registered above.
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -273,13 +288,19 @@ int main()
 #ifdef __APPLE__
     Texture texture("../textures/sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png");
     Texture teto_texture("../textures/MODEUS.jpeg");
+    Texture player_texture("../textures/texture.png");
 #endif
     shaderProgram.use();
     glUniform1i(tex0, 0); // set the texture uniform to texture unit 0
 
 
 // OBJECT INITALIZATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    Player player(&player_texture);
+    objectList.push_back(player);
+    player.setScale(vec2(1.0f,0.5f));
     //CREATED MIKU
     Object miku(&texture);
     objectList.push_back(miku);
@@ -307,9 +328,11 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         
+
+
         // input
         // -----
-        processInput(window, deltaTime, velocity);
+        processInput(window, deltaTime, velocity, &player);
         ImGui::ShowDemoWindow();
         
 
@@ -323,13 +346,16 @@ int main()
         
 
         miku.processVelocity(deltaTime, vec2(velocity.x,velocity.y));
+        player.processVelocity(deltaTime, vec2(velocity.x,velocity.y));
         velocity = 0;
         teto.processVelocity(deltaTime, vec2(teto_transform.x,teto_transform.y));
         teto_transform=0;
         
-        
+        player.draw(transformLoc);
         // teto.draw(transformLoc);
         // miku.draw(transformLoc);
+
+        
 
         // Dear ImGui is rendered after the game so the interface appears on top.
         ImGui::Begin("Game controls");
@@ -341,6 +367,35 @@ int main()
         }
         
         ImGui::End();
+
+        // HEALTH BAR STUFFFF
+        //##############//##############//##############//##############//##############//##############
+
+        ImGuiWindowFlags window_flags = 
+        ImGuiWindowFlags_NoDecoration | 
+        ImGuiWindowFlags_NoInputs | 
+        ImGuiWindowFlags_NoSavedSettings | 
+        ImGuiWindowFlags_NoFocusOnAppearing | 
+        ImGuiWindowFlags_NoBringToFrontOnFocus;
+        ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(220, 40), ImGuiCond_Always);
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
+
+        ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(82.0f/255.0f,15.0f/255.0f,15.0f/255.0f,1.0f));
+
+
+        std::cout << player.getHealthPercent() << std::endl;
+
+
+        if (ImGui::Begin("HealthBarOverlay", nullptr, window_flags)) 
+        {
+            // Render standard ImGui progress bar
+            ImGui::ProgressBar(player.getHealthPercent(), ImVec2(-1.0f, 20.0f), "");
+        }
+        ImGui::PopStyleColor(2);
+        ImGui::End();
+
+        
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

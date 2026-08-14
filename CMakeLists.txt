@@ -23,6 +23,7 @@ add_executable(HelloWorldGame
     src/shaders/VertexShader.cpp
     src/shaders/FragmentShader.cpp
     src/shaders/ShaderProgram.cpp
+    src/Player.cpp
     include/imgui/imgui.cpp
     include/imgui/imgui_draw.cpp
     include/imgui/imgui_tables.cpp
