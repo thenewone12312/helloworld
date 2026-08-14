@@ -26,7 +26,7 @@ class Object{
         void rotateRadians(float radians);
         void setSprite(Sprite* Sprite);
         Sprite* getSprite();
-        void draw(int &transformLoc);
+        void draw(int &transformLoc, int &scaleLoc);
         void uploadMesh();
         
         void processVelocity(float deltaTime); //or whatever you wanna call it

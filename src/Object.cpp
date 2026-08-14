@@ -22,7 +22,7 @@
 
 Object::Object(Sprite* sprite){
     this->position = vec2(0.0f, 0.0f);
-    this->scale = vec2(0.0f, 0.0f);
+    this->scale = vec2(20.0f, 1.0f);
     this->rotationRadians = 0.0f;
     this->VAO = 0;
     this->VBO = 0;
@@ -42,7 +42,7 @@ Object::Object(Sprite* sprite){
 
 Object::Object(Texture* texture){
     this->position = vec2(0.0f, 0.0f);
-    this->scale = vec2(0.0f, 0.0f);
+    this->scale = vec2(20.0f, 1.0f);
     this->rotationRadians = 0.0f;
     this->VAO = 0;
     this->VBO = 0;
@@ -174,7 +174,7 @@ void Object::uploadMesh()
 
 }
 
-void Object::draw(int &transformLoc)
+void Object::draw(int &transformLoc, int &scaleLoc)
 {
     if (sprite == nullptr || indexCount ==0)
         return;
@@ -182,6 +182,11 @@ void Object::draw(int &transformLoc)
     glUniform3f(transformLoc,
             getPosition().x,
             getPosition().y,
+            0.0f);
+
+    glUniform3f(scaleLoc,
+            getScale().x,
+            getScale().y,
             0.0f);
     
     //so we dont draw these everytime.

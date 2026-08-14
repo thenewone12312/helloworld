@@ -6,10 +6,12 @@ layout(location = 2) in vec2 aTex;
 
 uniform vec3 transform;
 
+uniform vec3 scale;
+
 out vec2 texCoord;
 
 void main()
 {
-    gl_Position = vec4(aPos + transform, 1.0);
+    gl_Position = vec4(aPos*scale + transform, 1.0);
     texCoord = aTex;
 }

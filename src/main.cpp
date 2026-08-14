@@ -274,16 +274,22 @@ int main()
     GLuint tex0 = glGetUniformLocation(shaderProgram.getID(), "tex0");
 
     int transformLoc = glGetUniformLocation(shaderProgram.getID(), "transform");
+    int scaleLoc = glGetUniformLocation(shaderProgram.getID(), "scale");
     vec3 transform(0.0f);
     vec3 velocity(0.0f);
     float speed = 1.0f;
 
     //bind textures 
 #ifdef _WIN32
-    auto texturePath = exePath / ".." / "textures" / "sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png";
-    Texture texture(texturePath.string());
-    auto texturePath = exePath / ".." / "textures" / "teto.jpeg";
-    Texture teto_texture(texturePath.string());
+    auto mikuTexturePath = exePath / ".." / "textures" / "sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png";
+    Texture texture(mikuTexturePath.string());
+
+    auto tetoTexturePath = exePath / ".." / "textures" / "teto.jpeg";
+    Texture teto_texture(tetoTexturePath.string());
+
+    auto playerTexturePath = exePath / ".." / "textures" / "texture.png";
+    Texture player_texture(playerTexturePath.string());
+
 #endif
 #ifdef __APPLE__
     Texture texture("../textures/sega-hatsune-miku-series-hatsune-miku-fuwa-petit-big-jumbo-plush-toy__39402.png");
@@ -333,7 +339,7 @@ int main()
         // input
         // -----
         processInput(window, deltaTime, velocity, &player);
-        ImGui::ShowDemoWindow();
+        // ImGui::ShowDemoWindow();
         
 
         // render
@@ -351,9 +357,9 @@ int main()
         teto.processVelocity(deltaTime, vec2(teto_transform.x,teto_transform.y));
         teto_transform=0;
         
-        player.draw(transformLoc);
-        // teto.draw(transformLoc);
-        // miku.draw(transformLoc);
+        player.draw(transformLoc, scaleLoc);
+        teto.draw(transformLoc, scaleLoc);
+        miku.draw(transformLoc, scaleLoc);
 
         
 
