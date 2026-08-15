@@ -306,13 +306,15 @@ int main()
 
     Player player(&player_texture);
     objectList.push_back(player);
-    player.setScale(vec2(1.0f,0.5f));
+    player.setScale(vec2(0.75f,1.0f));
     //CREATED MIKU
     Object miku(&texture);
     objectList.push_back(miku);
 
     Object teto(&teto_texture);
     objectList.push_back(teto);
+    miku.setScale(vec2(0.75f,1.0f));
+    teto.setScale(vec2(0.75f,1.0f));
 
     vec4 colorValue_prev(
         0.2f, 

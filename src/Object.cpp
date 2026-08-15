@@ -22,7 +22,7 @@
 
 Object::Object(Sprite* sprite){
     this->position = vec2(0.0f, 0.0f);
-    this->scale = vec2(20.0f, 1.0f);
+    this->scale = vec2(0.750f, 1.0f);
     this->rotationRadians = 0.0f;
     this->VAO = 0;
     this->VBO = 0;
@@ -42,7 +42,7 @@ Object::Object(Sprite* sprite){
 
 Object::Object(Texture* texture){
     this->position = vec2(0.0f, 0.0f);
-    this->scale = vec2(20.0f, 1.0f);
+    this->scale = vec2(0.750f, 1.0f);
     this->rotationRadians = 0.0f;
     this->VAO = 0;
     this->VBO = 0;
