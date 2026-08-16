@@ -359,7 +359,7 @@ int main()
         teto.processVelocity(deltaTime, vec2(teto_transform.x,teto_transform.y));
         teto_transform=0;
         
-        player.draw(transformLoc, scaleLoc);
+        // player.draw(transformLoc, scaleLoc);
         teto.draw(transformLoc, scaleLoc);
         miku.draw(transformLoc, scaleLoc);
 
@@ -387,9 +387,12 @@ int main()
         ImGuiWindowFlags_NoBringToFrontOnFocus;
         ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(220, 40), ImGuiCond_Always);
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
 
-        ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(82.0f/255.0f,15.0f/255.0f,15.0f/255.0f,1.0f));
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0)); //window color
+
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 1.0f)); //the background thing behind the bar
+
+        ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(9.0f/255.0f,277.0f/255.0f,27.0f/255.0f,1.0f));
 
 
         std::cout << player.getHealthPercent() << std::endl;
@@ -400,7 +403,7 @@ int main()
             // Render standard ImGui progress bar
             ImGui::ProgressBar(player.getHealthPercent(), ImVec2(-1.0f, 20.0f), "");
         }
-        ImGui::PopStyleColor(2);
+        ImGui::PopStyleColor(3);
         ImGui::End();
 
         
